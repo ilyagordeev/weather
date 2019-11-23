@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="main.css">
+    <title>Simple Weather 1</title>
+</head>
+<body>
+<form id="sendme">
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-lg-4">
+                <select name ="city" id="city" class="custom-select js-check">
+                    <option value="10" selected>Екатеринбург</option>
+                    <option value="20">Москва</option>
+                    <option value="30">Нью-Йорк</option>
+                </select>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" {{checkedYandex}} value="1" id="yandex" name="weatherProvider" class="custom-control-input  js-check">
+                    <label class="custom-control-label" for="yandex">Яндекс</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" {{checkedOW}} value="2" id="openWeather" name="weatherProvider" class="custom-control-input  js-check">
+                    <label class="custom-control-label" for="openWeather">OpenWeather</label>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-4">
+
+            <div class="weather-card">
+                <p>Температура: <span class="c-temp"></span>°C</p>
+                <p>Ветер: <span class="c-wind"></span> м/c</p>
+                <p>Влажность: <span class="c-humidity"></span>%</p>
+                <p>Давление: <span class="c-pressure"></span> гПа</p>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="main.js"></script>
+
+
+</body>
+</html>
