@@ -66,7 +66,7 @@ public class Weather {
 
     public void setTemp(String temp) {
         this.temp = temp;
-        int tempI = Integer.parseInt(temp);
+        Float tempI = Float.parseFloat(temp);
         if (tempI <= 0) {
             this.color = "#273E6A";
         } else if (tempI > 0 && tempI < 15) {

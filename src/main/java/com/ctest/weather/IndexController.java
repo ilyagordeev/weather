@@ -22,7 +22,7 @@ public class IndexController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView index(HttpServletResponse response, HttpServletRequest request) {
-        String city = "", weatherProvider = "";
+        String city = "10", weatherProvider = "1";
 
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -39,6 +39,41 @@ public class IndexController {
         } else {
             model.put("checkedYandex", "");
             model.put("checkedOW", "checked");
+        }
+        if (city.equals("10")) {
+            model.put("selectedEKB", "selected");
+            model.put("selectedMSC", "");
+            model.put("selectedNY", "");
+            model.put("selectedAM", "");
+            model.put("selectedMD", "");
+        }
+        if (city.equals("20")) {
+            model.put("selectedEKB", "");
+            model.put("selectedMSC", "selected");
+            model.put("selectedNY", "");
+            model.put("selectedAM", "");
+            model.put("selectedMD", "");
+        }
+        if (city.equals("30")) {
+            model.put("selectedEKB", "");
+            model.put("selectedMSC", "");
+            model.put("selectedNY", "selected");
+            model.put("selectedAM", "");
+            model.put("selectedMD", "");
+        }
+        if (city.equals("40")) {
+            model.put("selectedEKB", "");
+            model.put("selectedMSC", "");
+            model.put("selectedNY", "");
+            model.put("selectedAM", "selected");
+            model.put("selectedMD", "");
+        }
+        if (city.equals("50")) {
+            model.put("selectedEKB", "");
+            model.put("selectedMSC", "");
+            model.put("selectedNY", "");
+            model.put("selectedAM", "");
+            model.put("selectedMD", "selected");
         }
 
         return new ModelAndView("index", model);

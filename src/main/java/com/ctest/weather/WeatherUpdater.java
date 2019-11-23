@@ -6,8 +6,19 @@ import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WeatherUpdater {
+
+    private final Map<Integer, String> Coordinates = new HashMap<>()
+    {{
+        put(1, "lat=56.836331&lon=60.605546"); // Ekaterinburg
+        put(2, "lat=55.748952&lon=37.620076"); // Moscow
+        put(3, "lat=40.726063&lon=-73.822881"); // New-York
+        put(4, "lat=52.377109&lon=4.897162"); // Amsterdam
+        put(5, "lat=59.563922&lon=150.814959"); // Magadan
+    }};
 
     private final WeatherRepository weatherRepository;
 
@@ -15,19 +26,27 @@ public class WeatherUpdater {
         this.weatherRepository = weatherRepository;
     }
 
-    public void RequestYandex() {
-        String url = "https://api.weather.yandex.ru/v1/forecast?lat=60.61&lon=56.84&limit=1&extra=true";
+    public void Update(int hash) {
+        if (hash % 10 == 1) RequestYandex(hash);
+        if (hash % 10 == 2) RequestOpenWeather(hash);
+    }
 
-                RestTemplate rest = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-Yandex-API-Key", "d43de752-4d15-4b22-9093-72e8dc7794b0");
+    private void RequestYandex(int hash) {
+        String url = String.format("https://api.weather.yandex.ru/v1/forecast?%s&limit=1&extra=true",
+                                    Coordinates.get(hash / 10));
+//        System.out.println(url);
+//        System.out.println(hash);
+//        System.out.println(Coordinates.get(hash));
+
         String body = "";
 
+        RestTemplate rest = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-Yandex-API-Key", "d43de752-4d15-4b22-9093-72e8dc7794b0");
         HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
         ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
 
         String response = responseEntity.getBody();
-        System.out.println(response);
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -44,7 +63,7 @@ public class WeatherUpdater {
                     .withPressure(pressure)
                     .withTemp(temp)
                     .withWind(wind)
-                    .withId(11).build();
+                    .withId(hash).build();
 
             weatherRepository.save(weather);
         } catch (IOException e) {
@@ -53,8 +72,13 @@ public class WeatherUpdater {
 
     }
 
-    public void RequestOpenWeather() {
-        String url = "https://api.openweathermap.org/data/2.5/weather?q=Yekaterinburg&units=metric&APPID=c351d6bef8d8ca2005cd43ddbad73a04";
+    private void RequestOpenWeather(int hash) {
+        String url = String.format("https://api.openweathermap.org/data/2.5/weather?%s&units=metric&APPID=c351d6bef8d8ca2005cd43ddbad73a04",
+                                    Coordinates.get(hash / 10));
+
+        System.out.println(url);
+        System.out.println(hash);
+        System.out.println(Coordinates.get(hash / 10));
 
         RestTemplate rest = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -80,7 +104,7 @@ public class WeatherUpdater {
                     .withPressure(pressure)
                     .withTemp(temp)
                     .withWind(wind)
-                    .withId(12).build();
+                    .withId(hash).build();
 
             weatherRepository.save(weather);
         } catch (IOException e) {

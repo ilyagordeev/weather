@@ -21,27 +21,29 @@ public class ApiController {
 
     @PostMapping("/weather")
     public Weather getWeather(HttpServletResponse response, HttpServletRequest request) {
-        String city = request.getParameter("city");
-        String weatherProvider = request.getParameter("weatherProvider");
-        System.out.println(city);
-        System.out.println(weatherProvider);
-        response.addCookie(new Cookie("city", city));
-        response.addCookie(new Cookie("weatherProvider", weatherProvider));
+        int city = Integer.parseInt(request.getParameter("city"));
+        int weatherProvider = Integer.parseInt(request.getParameter("weatherProvider"));
 
-        if (!weatherRepository.findById(12).isPresent()
-                || weatherRepository.findById(12).get().expired()) {
-            new WeatherUpdater(weatherRepository).RequestOpenWeather();
+        int hash = city + weatherProvider;
+        System.out.println(hash);
+
+//        response.addCookie(new Cookie("city", city));
+//        response.addCookie(new Cookie("weatherProvider", weatherProvider));
+
+        if (!weatherRepository.findById(hash).isPresent()
+                || weatherRepository.findById(hash).get().expired()) {
+            new WeatherUpdater(weatherRepository).Update(hash);
         }
 
-        return weatherRepository.findById(12).get();
+        return weatherRepository.findById(hash).get();
     }
 
     @GetMapping ("/weather")
     public Weather getWeatherGet() {
-        if (!weatherRepository.findById(12).isPresent()
-                || weatherRepository.findById(12).get().expired()) {
-            new WeatherUpdater(weatherRepository).RequestOpenWeather();
+        if (!weatherRepository.findById(11).isPresent()
+                || weatherRepository.findById(11).get().expired()) {
+            new WeatherUpdater(weatherRepository).Update(11);
         }
-        return weatherRepository.findById(12).get();
+        return weatherRepository.findById(11).get();
     }
 }
