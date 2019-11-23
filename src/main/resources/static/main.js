@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-	sendAjaxForm( 'sendme', 'http://localhost:8080/api/weather');
+	sendAjaxForm( 'sendme', '/api/weather');
  
 $('.js-check').change(function(){
 
@@ -8,7 +8,7 @@ $('.js-check').change(function(){
  var city = $('#city').val();
  var radioBtn = $('input[name=weatherProvider]:checked').val();
 
- sendAjaxForm( form_id, 'http://localhost:8080/api/weather');
+ sendAjaxForm( form_id, '/api/weather');
 
 });
 

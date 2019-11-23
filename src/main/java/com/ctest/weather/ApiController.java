@@ -28,12 +28,20 @@ public class ApiController {
         response.addCookie(new Cookie("city", city));
         response.addCookie(new Cookie("weatherProvider", weatherProvider));
 
-        return weatherRepository.findById(11).get();
+        if (!weatherRepository.findById(12).isPresent()
+                || weatherRepository.findById(12).get().expired()) {
+            new WeatherUpdater(weatherRepository).RequestOpenWeather();
+        }
+
+        return weatherRepository.findById(12).get();
     }
 
     @GetMapping ("/weather")
     public Weather getWeatherGet() {
-        System.out.println(weatherRepository.findById(11).get().expired());
-        return weatherRepository.findById(11).get();
+        if (!weatherRepository.findById(12).isPresent()
+                || weatherRepository.findById(12).get().expired()) {
+            new WeatherUpdater(weatherRepository).RequestOpenWeather();
+        }
+        return weatherRepository.findById(12).get();
     }
 }
