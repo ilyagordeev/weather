@@ -9,7 +9,7 @@ public class Weather {
     @Id
     private Integer id;
 
-    private final Long UpdateTime = 300000L;
+    private final Long UpdateTime = 200000L;
     private String temp;
     private String cloudness;
     private String wind;

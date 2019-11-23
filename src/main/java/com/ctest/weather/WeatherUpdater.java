@@ -34,10 +34,6 @@ public class WeatherUpdater {
     private void RequestYandex(int hash) {
         String url = String.format("https://api.weather.yandex.ru/v1/forecast?%s&limit=1&extra=true",
                                     Coordinates.get(hash / 10));
-//        System.out.println(url);
-//        System.out.println(hash);
-//        System.out.println(Coordinates.get(hash));
-
         String body = "";
 
         RestTemplate rest = new RestTemplate();
@@ -45,7 +41,6 @@ public class WeatherUpdater {
         headers.add("X-Yandex-API-Key", "d43de752-4d15-4b22-9093-72e8dc7794b0");
         HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
         ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
-
         String response = responseEntity.getBody();
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -75,14 +70,10 @@ public class WeatherUpdater {
     private void RequestOpenWeather(int hash) {
         String url = String.format("https://api.openweathermap.org/data/2.5/weather?%s&units=metric&APPID=c351d6bef8d8ca2005cd43ddbad73a04",
                                     Coordinates.get(hash / 10));
-
-        System.out.println(url);
-        System.out.println(hash);
-        System.out.println(Coordinates.get(hash / 10));
+        String body = "";
 
         RestTemplate rest = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        String body = "";
 
         HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
         ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.GET, requestEntity, String.class);

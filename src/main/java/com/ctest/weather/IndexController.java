@@ -1,13 +1,11 @@
 package com.ctest.weather;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,8 +18,8 @@ public class IndexController {
         this.weatherRepository = weatherRepository;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView index(HttpServletResponse response, HttpServletRequest request) {
+    @GetMapping("/")
+    public ModelAndView index(HttpServletRequest request) {
         String city = "10", weatherProvider = "1";
 
         Cookie[] cookies = request.getCookies();
@@ -29,8 +27,6 @@ public class IndexController {
             city = cookies[0].getValue();
             weatherProvider = cookies[1].getValue();
         }
-
-        System.out.println(city + " " + weatherProvider);
 
         Map<String, String> model = new HashMap<>();
         if (weatherProvider.equals("1")) {
