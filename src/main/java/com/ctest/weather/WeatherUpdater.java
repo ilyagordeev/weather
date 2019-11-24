@@ -1,5 +1,6 @@
 package com.ctest.weather;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
@@ -11,7 +12,7 @@ import java.util.Map;
 
 public class WeatherUpdater {
 
-    private final Map<String, String> Coordinates = new HashMap<>()
+    private Map<String, String> coordinatesCache = new HashMap<>()
     {{
         put("Екатеринбург", "lat=56.836331&lon=60.605546"); // Ekaterinburg
         put("Москва", "lat=55.748952&lon=37.620076"); // Moscow
@@ -26,13 +27,48 @@ public class WeatherUpdater {
         this.weatherRepository = weatherRepository;
     }
 
-    private String getCoordinates(String city) {
-        return Coordinates.get(city);
-    }
-
     public void Update(String city, String weatherProvider) {
         if (weatherProvider.equals("Yandex")) RequestYandex(city);
         if (weatherProvider.equals("OpenWeather")) RequestOpenWeather(city);
+    }
+
+    private String getCoordinates(String city) {
+        if (!coordinatesCache.containsKey(city)) {
+            String coordinates = Geocode(city);
+            if (coordinates != null) {
+                coordinatesCache.put(city, coordinates);
+                return coordinatesCache.get(city);
+            }
+        } else {
+            return coordinatesCache.get(city);
+        }
+        return null;
+    }
+
+    private String Geocode(String city) {
+        String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=AIzaSyCjzksE_SwyV6AQSJw9EoL3Lq9T0jY3ekg",
+                                    city);
+        RestTemplate rest = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        String body = "";
+
+        HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
+        ResponseEntity<String> responseEntity = rest.exchange(url,
+                HttpMethod.GET, requestEntity, String.class);
+        String response = responseEntity.getBody();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        assert response != null;
+        try {
+            JsonNode rootNode = objectMapper.readTree(response);
+            String lat = rootNode.path("results").get(0).path("geometry").path("location").path("lat").asText();
+            String lng = rootNode.path("results").get(0).path("geometry").path("location").path("lng").asText();
+            return "lat=" + lat + "&lon=" + lng;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 
     private void RequestYandex(String city) {
