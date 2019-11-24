@@ -1,7 +1,8 @@
 package com.ctest.weather;
 
 public final class WeatherBuilder {
-    private Integer id;
+    private String city;
+    private String weatherProvider;
     private String temp;
     private String cloudness;
     private String wind;
@@ -15,8 +16,13 @@ public final class WeatherBuilder {
         return new WeatherBuilder();
     }
 
-    public WeatherBuilder withId(Integer id) {
-        this.id = id;
+    public WeatherBuilder withCity(String city) {
+        this.city = city;
+        return this;
+    }
+
+    public WeatherBuilder withWeatherProvider(String weatherProvider) {
+        this.weatherProvider = weatherProvider;
         return this;
     }
 
@@ -47,7 +53,8 @@ public final class WeatherBuilder {
 
     public Weather build() {
         Weather weather = new Weather();
-        weather.setId(id);
+        weather.setCity(city);
+        weather.setWeatherProvider(weatherProvider);
         weather.setTemp(temp);
         weather.setCloudness(cloudness);
         weather.setWind(wind);

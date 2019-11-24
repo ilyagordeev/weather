@@ -1,15 +1,21 @@
 package com.ctest.weather;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
+//@Table(name = "WEATHER")
 public class Weather {
     @Id
-    private Integer id;
+    @GeneratedValue
+    private Long id;
 
     private final Long UpdateTime = 200000L;
+    private String city;
+    private String weatherProvider;
     private String temp;
     private String cloudness;
     private String wind;
@@ -29,8 +35,32 @@ public class Weather {
         return (new Date().getTime() - requestTime) >= UpdateTime;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getColor2() {
         return color2;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getWeatherProvider() {
+        return weatherProvider;
+    }
+
+    public void setWeatherProvider(String weatherProvider) {
+        this.weatherProvider = weatherProvider;
     }
 
     public void setColor2(String color2) {
@@ -59,14 +89,6 @@ public class Weather {
 
     public void setResult(String result) {
         this.result = result;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public void setRequestTime(Long requestTime) {

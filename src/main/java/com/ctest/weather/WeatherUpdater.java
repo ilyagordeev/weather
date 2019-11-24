@@ -11,13 +11,13 @@ import java.util.Map;
 
 public class WeatherUpdater {
 
-    private final Map<Integer, String> Coordinates = new HashMap<>()
+    private final Map<String, String> Coordinates = new HashMap<>()
     {{
-        put(1, "lat=56.836331&lon=60.605546"); // Ekaterinburg
-        put(2, "lat=55.748952&lon=37.620076"); // Moscow
-        put(3, "lat=40.726063&lon=-73.822881"); // New-York
-        put(4, "lat=52.377109&lon=4.897162"); // Amsterdam
-        put(5, "lat=59.563922&lon=150.814959"); // Magadan
+        put("Екатеринбург", "lat=56.836331&lon=60.605546"); // Ekaterinburg
+        put("Москва", "lat=55.748952&lon=37.620076"); // Moscow
+        put("Нью-Йорк", "lat=40.726063&lon=-73.822881"); // New-York
+        put("Амстердам", "lat=52.377109&lon=4.897162"); // Amsterdam
+        put("Магадан", "lat=59.563922&lon=150.814959"); // Magadan
     }};
 
     private final WeatherRepository weatherRepository;
@@ -26,14 +26,18 @@ public class WeatherUpdater {
         this.weatherRepository = weatherRepository;
     }
 
-    public void Update(int hash) {
-        if (hash % 10 == 1) RequestYandex(hash);
-        if (hash % 10 == 2) RequestOpenWeather(hash);
+    private String getCoordinates(String city) {
+        return Coordinates.get(city);
     }
 
-    private void RequestYandex(int hash) {
+    public void Update(String city, String weatherProvider) {
+        if (weatherProvider.equals("Yandex")) RequestYandex(city);
+        if (weatherProvider.equals("OpenWeather")) RequestOpenWeather(city);
+    }
+
+    private void RequestYandex(String city) {
         String url = String.format("https://api.weather.yandex.ru/v1/forecast?%s&limit=1&extra=true",
-                                    Coordinates.get(hash / 10));
+                                    getCoordinates(city));
         String body = "";
 
         RestTemplate rest = new RestTemplate();
@@ -45,6 +49,7 @@ public class WeatherUpdater {
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
+            assert response != null;
             JsonNode rootNode = objectMapper.readTree(response);
             String temp = rootNode.path("fact").path("temp").asText();
             String wind = rootNode.path("fact").path("wind_speed").asText();
@@ -58,7 +63,8 @@ public class WeatherUpdater {
                     .withPressure(pressure)
                     .withTemp(temp)
                     .withWind(wind)
-                    .withId(hash).build();
+                    .withCity(city)
+                    .withWeatherProvider("Yandex").build();
 
             weatherRepository.save(weather);
         } catch (IOException e) {
@@ -67,14 +73,13 @@ public class WeatherUpdater {
 
     }
 
-    private void RequestOpenWeather(int hash) {
+    private void RequestOpenWeather(String city) {
         String url = String.format("https://api.openweathermap.org/data/2.5/weather?%s&units=metric&APPID=c351d6bef8d8ca2005cd43ddbad73a04",
-                                    Coordinates.get(hash / 10));
+                                                        getCoordinates(city));
         String body = "";
 
         RestTemplate rest = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-
         HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
         ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
      //   HttpStatus status = responseEntity.getStatusCode();
@@ -82,6 +87,7 @@ public class WeatherUpdater {
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
+            assert response != null;
             JsonNode rootNode = objectMapper.readTree(response);
             String temp = rootNode.path("main").path("temp").asText();
             String wind = rootNode.path("wind").path("speed").asText();
@@ -95,7 +101,8 @@ public class WeatherUpdater {
                     .withPressure(pressure)
                     .withTemp(temp)
                     .withWind(wind)
-                    .withId(hash).build();
+                    .withCity(city)
+                    .withWeatherProvider("OpenWeather").build();
 
             weatherRepository.save(weather);
         } catch (IOException e) {
