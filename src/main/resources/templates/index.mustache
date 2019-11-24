@@ -16,21 +16,21 @@
         <div class="row">
             <div class="col-lg-4">
                 <select name ="city" id="city" class="custom-select js-check">
-                    <option value="10" {{selectedEKB}}>Екатеринбург</option>
-                    <option value="20" {{selectedMSC}}>Москва</option>
-                    <option value="30" {{selectedNY}}>Нью-Йорк</option>
-                    <option value="40" {{selectedAM}}>Амстердам</option>
-                    <option value="50" {{selectedMD}}>Магадан</option>
+                    <option value="10" selected>Екатеринбург</option>
+                    <option value="20">Москва</option>
+                    <option value="30">Нью-Йорк</option>
+                    <option value="40">Амстердам</option>
+                    <option value="50">Магадан</option>
                 </select>
             </div>
 
             <div class="col-lg-8">
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" {{checkedYandex}} value="1" id="yandex" name="weatherProvider" class="custom-control-input  js-check">
+                    <input type="radio" checked value="1" id="yandex" name="weatherProvider" class="custom-control-input  js-check">
                     <label class="custom-control-label" for="yandex">Яндекс</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" {{checkedOW}} value="2" id="openWeather" name="weatherProvider" class="custom-control-input  js-check">
+                    <input type="radio" value="2" id="openWeather" name="weatherProvider" class="custom-control-input  js-check">
                     <label class="custom-control-label" for="openWeather">OpenWeather</label>
                 </div>
             </div>

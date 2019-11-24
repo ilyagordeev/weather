@@ -16,6 +16,7 @@ public class Weather {
     private String pressure;
     private String humidity;
     private String color;
+    private String color2;
     private String result;
     private Long requestTime;
 
@@ -26,6 +27,14 @@ public class Weather {
 
     public boolean expired() {
         return (new Date().getTime() - requestTime) >= UpdateTime;
+    }
+
+    public String getColor2() {
+        return color2;
+    }
+
+    public void setColor2(String color2) {
+        this.color2 = color2;
     }
 
     public String getColor() {
@@ -68,13 +77,17 @@ public class Weather {
         this.temp = temp;
         Float tempI = Float.parseFloat(temp);
         if (tempI <= 0) {
-            this.color = "#273E6A";
+            this.color = "#74a3ff";
+            this.color2 = "#0055ff";
         } else if (tempI > 0 && tempI < 15) {
-            this.color = "#1F6953";
+            this.color = "#52ffcb";
+            this.color2 = "#00a070";
         } else if (tempI >= 15 && tempI < 25) {
-            this.color = "#CA361B";
+            this.color = "#ff8e79";
+            this.color2 = "#d0280a";
         } else {
-            this.color = "#FF1F1F";
+            this.color = "#ff0000";
+            this.color2 = "#bc0000";
         }
     }
 

@@ -1,5 +1,6 @@
 package com.ctest.weather;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +33,23 @@ public class ApiController {
             new WeatherUpdater(weatherRepository).Update(hash);
         }
 
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Headers", "x-requested-with");
+
         return weatherRepository.findById(hash).get();
+    }
+
+    @GetMapping("weather")
+    public Weather get(HttpServletResponse response, HttpServletRequest request) {
+        if (!weatherRepository.findById(11).isPresent()
+                || weatherRepository.findById(11).get().expired()) {
+            new WeatherUpdater(weatherRepository).Update(11);
+        }
+
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Headers", "x-requested-with");
+
+        return weatherRepository.findById(11).get();
     }
 
 }
