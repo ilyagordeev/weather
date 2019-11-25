@@ -1,6 +1,5 @@
 package com.ctest.weather;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,34 +19,42 @@ public class ApiController {
 
     @PostMapping("/weather")
     public Weather getWeather(HttpServletResponse response, HttpServletRequest request) {
+
         String city = request.getParameter("city");
         String weatherProvider = request.getParameter("weatherProvider");
+        boolean update = true; // update status, true if success
 
-  //      int hash = city + weatherProvider;
+        // проверка корректности провайдера погоды и при необходимости создание/обновление объекта погоды
+        if (weatherProvider.equals("Yandex") || weatherProvider.equals("OpenWeather")) {
+            if (!weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).isPresent()) {
+                update = new WeatherUpdater(weatherRepository).Update(city, weatherProvider);
+            } else if (weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get().expired()) {
+                weatherRepository.delete(weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get());
+                update = new WeatherUpdater(weatherRepository).Update(city, weatherProvider);
+            }
+        } else update = false;
 
-        if (!weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).isPresent()
-                || weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get().expired()) {
-            new WeatherUpdater(weatherRepository).Update(city, weatherProvider);
-        }
 
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Headers", "x-requested-with");
+
+        System.out.println(update);
+
+        // создаем объект ошибки
+        if (!update) {
+            Weather fail = new WeatherBuilder()
+                    .withCity(city)
+                    .withWeatherProvider(weatherProvider)
+                    .withCloudness("0_0")
+                    .withHumidity("-_-")
+                    .withPressure("$_$")
+                    .withTemp("0")
+                    .withWind("0").build();
+            fail.setResult("notfound");
+            return fail;
+        }
 
         return weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get();
-    }
-
-    @GetMapping("weather")
-    public Weather get(HttpServletResponse response, HttpServletRequest request) {
-        if (!weatherRepository.findWeatherByCityAndWeatherProvider("Екатеринбург", "Yandex").isPresent()
-                || weatherRepository.findWeatherByCityAndWeatherProvider("Екатеринбург", "Yandex").get().expired()) {
-            new WeatherUpdater(weatherRepository).Update("Екатеринбург", "Yandex");
-        }
-
-        response.addHeader("Access-Control-Allow-Origin", "*");
-        response.addHeader("Access-Control-Allow-Headers", "x-requested-with");
-
-        //return weatherRepository.findById(11).get();
-        return weatherRepository.findWeatherByCityAndWeatherProvider("Екатеринбург", "Yandex").get();
     }
 
 }
