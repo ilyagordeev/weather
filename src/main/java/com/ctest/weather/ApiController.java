@@ -12,9 +12,22 @@ import javax.servlet.http.HttpServletResponse;
 public class ApiController {
 
     final WeatherRepository weatherRepository;
+    final WeatherUpdater weatherUpdater;
+    Weather fail;
 
     public ApiController(WeatherRepository weatherRepository) {
         this.weatherRepository = weatherRepository;
+        weatherUpdater = new WeatherUpdater(weatherRepository);
+
+        fail = new WeatherBuilder()
+                .withCity("city")
+                .withWeatherProvider("weatherProvider")
+                .withCloudness("0_0")
+                .withHumidity("-_-")
+                .withPressure("$_$")
+                .withTemp("0")
+                .withWind("0").build();
+        fail.setResult("notfound");
     }
 
     @PostMapping("/weather")
@@ -27,30 +40,27 @@ public class ApiController {
         // проверка корректности провайдера погоды и при необходимости создание/обновление объекта погоды
         if (weatherProvider.equals("Yandex") || weatherProvider.equals("OpenWeather")) {
             if (!weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).isPresent()) {
-                update = new WeatherUpdater(weatherRepository).Update(city, weatherProvider);
+                if (!WeatherUpdater.inUnknownCity(city))
+                    update = weatherUpdater.Update(city, weatherProvider);
+                else {
+                    update = false;
+                }
             } else if (weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get().expired()) {
                 weatherRepository.delete(weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get());
-                update = new WeatherUpdater(weatherRepository).Update(city, weatherProvider);
+                update = weatherUpdater.Update(city, weatherProvider);
             }
         } else update = false;
-
 
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Headers", "x-requested-with");
 
         System.out.println(update);
+        System.out.println(city);
 
-        // создаем объект ошибки
+        // возвращаем ошибку
         if (!update) {
-            Weather fail = new WeatherBuilder()
-                    .withCity(city)
-                    .withWeatherProvider(weatherProvider)
-                    .withCloudness("0_0")
-                    .withHumidity("-_-")
-                    .withPressure("$_$")
-                    .withTemp("0")
-                    .withWind("0").build();
-            fail.setResult("notfound");
+            fail.setCity(city);
+            fail.setWeatherProvider(weatherProvider);
             return fail;
         }
 
