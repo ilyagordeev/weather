@@ -1,3 +1,0 @@
-.weather-card {background:#e1e1e1; padding: 20px; border-radius: 5px; position: relative; }
-.weather-card.error {background:red; padding: 20px; border-radius: 5px;}
-.weather-card.error:after {content:'Сервер погоды сдох'; position: absolute; top:0;bottom:0;left:0; right:0; background: red; color: #fff; display: flex; align-items: center; justify-content: center;}

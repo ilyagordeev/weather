@@ -1,5 +1,8 @@
-package com.ctest.weather;
+package com.ctest.weather.controller;
 
+import com.ctest.weather.model.Weather;
+import com.ctest.weather.model.WeatherBuilder;
+import com.ctest.weather.model.WeatherRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

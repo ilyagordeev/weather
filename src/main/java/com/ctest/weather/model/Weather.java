@@ -1,13 +1,11 @@
-package com.ctest.weather;
+package com.ctest.weather.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-//@Table(name = "WEATHER")
 public class Weather {
     @Id
     @GeneratedValue
@@ -21,7 +19,7 @@ public class Weather {
     private String wind;
     private String pressure;
     private String humidity;
-    private String color;
+    private String color; // цвета для значка градусов (градиент)
     private String color2;
     private String result;
     private Long requestTime;

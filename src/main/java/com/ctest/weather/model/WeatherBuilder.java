@@ -1,4 +1,4 @@
-package com.ctest.weather;
+package com.ctest.weather.model;
 
 public final class WeatherBuilder {
     private String city;
@@ -9,7 +9,7 @@ public final class WeatherBuilder {
     private String pressure;
     private String humidity;
 
-    WeatherBuilder() {
+    public WeatherBuilder() {
     }
 
     public static WeatherBuilder aWeather() {

@@ -1,65 +1,116 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="main.css">
-    <title>Simple Weather 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles/main.css">
+    <title>Simple Weather</title>
 </head>
 <body>
-<form id="sendme">
-    <div class="container py-4">
-        <div class="row">
-            <div class="col-lg-4">
-                <select name ="city" id="city" class="custom-select js-check">
-                    <option value="Екатеринбург" selected>Екатеринбург</option>
-                    <option value="Москва">Москва</option>
-                    <option value="Нью-Йорк">Нью-Йорк</option>
-                    <option value="Амстердам">Амстердам</option>
-                    <option value="Магадан">Магадан</option>
-                </select>
-            </div>
-
-            <div class="col-lg-8">
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" checked value="Yandex" id="yandex" name="weatherProvider" class="custom-control-input  js-check">
-                    <label class="custom-control-label" for="yandex">Яндекс</label>
+	<div class="preloader">
+		<div class="preloader_ball"></div>
+		<div class="preloader_ball"></div>
+		<div class="preloader_ball"></div>
+	</div>
+	<main>
+			<section>
+			<div class="wrapper">
+				<div class="container">
+					<h1>Simple Weather</h1>
                 </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" value="OpenWeather" id="openWeather" name="weatherProvider" class="custom-control-input  js-check">
-                    <label class="custom-control-label" for="openWeather">OpenWeather</label>
-                </div>
-            </div>
+			</div>
+		</section>
+		
+        <section>
+			<div class="wrapper">
+				<div class="container">
+					<form id="sendme">
+						
+							<div class="city-row">
+									<div class="pseudolabel">Локация</div>
+									<input type="text" name ="city_ps" id="city_ps" class="custom-select" value="Екатеринбург">
+									<span class="search_btn"></span>
+                            </div>
 
-        </div>
-    </div>
+						    <input type="hidden" name ="city" id="city" class="custom-select js-check" value="Екатеринбург">
+								<div class="city_list">
+										<span class="city-name-label" data-name="Екатеринбург" selected>Екатеринбург</span>
+										<span class="city-name-label" data-name="Москва">Москва</span>
+										<span class="city-name-label" data-name="Нью-Йорк">Нью-Йорк</span>
+										<span class="city-name-label" data-name="Амстердам">Амстердам</span>
+										<span class="city-name-label" data-name="Магадан">Магадан</span>
+										<span class="city-name-label" data-name="Бангкок">Бангкок</span>
+										<span class="city-name-label" data-name="Кейптаун">Кейптаун</span>
+										<span class="city-name-label" data-name="Владивосток">Владивосток</span>
+								</div>
 
-</form>
-<div class="container py-4">
-    <div class="row">
-        <div class="col-lg-4">
+									<div class="pseudolabel">Источник данных</div>
+									<div class="checkcontainers">
+										<label class="checkcontainer">
+											Яндекс-Погода  		
+											<input type="radio" value="Yandex" id="yandex" name="weatherProvider" class="custom-control-input  js-check" checked>
+											<span class="radiobtn"></span>
+										</label>
 
-            <div class="weather-card">
-                <p>Температура: <span class="c-temp"></span>°C</p>
-                <p>Ветер: <span class="c-wind"></span> м/c</p>
-                <p>Влажность: <span class="c-humidity"></span>%</p>
-                <p>Давление: <span class="c-pressure"></span> гПа</p>
+										<label class="checkcontainer">
+											OpenWeather  		
+											<input type="radio" value="OpenWeather" id="openWeather" name="weatherProvider" class="custom-control-input  js-check" >
+											<span class="radiobtn"></span>
+										</label>
+									</div>
+
+					</form>
+
+				</div>
+			</div>
+		</section>
+		
+		<section>
+			<div class="wrapper">
+				<div class="container">
+
+					<div class="weather-items">
+					<div class="weather-item">
+						<div class="weather-item-name">Температура</div>
+						<div class="weather-item-val"><span class="c-temp"></span><span class="cels"><span class="cels-in"></span></span></div>
+						<div class="weather-item-descr">градусы цельсия</div>
+					</div><!-- 
+					--><div class="weather-item">
+						<div class="weather-item-name">Влажность</div>
+						<div class="weather-item-val"><span class="c-humidity"></div>
+						<div class="weather-item-bg bg-humidity"></div>
+						<div class="weather-item-descr">относительные проценты</div>
+
+					</div><!-- 
+				 --><div class="weather-item">
+						<div class="weather-item-name">Ветер</div>
+						<div class="weather-item-val"><span class="c-wind"></span></div>
+							<div class="weather-item-descr">метры в секунду</div>
+					</div><!-- 
+				 --><div class="weather-item">
+						<div class="weather-item-name">Облачность</div>
+						<div class="weather-item-val"><span class="c-cloudness"></span></div>
+						<div class="weather-item-descr">относительные проценты</div>
+						<div class="weather-item-bg bg-cloudness"></div>
+					</div><!-- 
+				 
+				 --><div class="weather-item">
+						<div class="weather-item-name">Давление</div>
+						<div class="weather-item-val"><span class="c-pressure"></span></div>
+							<div class="weather-item-descr">гПа</div>
+					</div>
+
+				</div>
+				</div>
+			</div>
+		</section>
 
 
-            </div>
-
-        </div>
-    </div>
-</div>
-
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	</main>
+	
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-<script src="main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+<script src="js/main.js"></script>
 
 
 </body>

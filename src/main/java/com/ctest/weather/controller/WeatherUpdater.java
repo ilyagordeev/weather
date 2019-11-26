@@ -1,9 +1,17 @@
-package com.ctest.weather;
+package com.ctest.weather.controller;
 
+import com.ctest.weather.ClientConfig;
+import com.ctest.weather.model.Weather;
+import com.ctest.weather.model.WeatherBuilder;
+import com.ctest.weather.model.WeatherRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.*;
+import org.aeonbits.owner.ConfigFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -15,8 +23,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class WeatherUpdater {
 
+    private final String TokenGoogleApi;
+    private final String TokenYandexApi;
+    private final String TokenOpenWeatherApi;
+
     public WeatherUpdater(WeatherRepository weatherRepository) {
         this.weatherRepository = weatherRepository;
+        ClientConfig cfg = ConfigFactory.create(ClientConfig.class);
+        TokenGoogleApi = cfg.TokenGoogleApi();
+        TokenYandexApi = cfg.TokenYandexApi();
+        TokenOpenWeatherApi = cfg.TokenOpenWeatherApi();
     }
 
     public boolean Update(String city, String weatherProvider) {
@@ -61,7 +77,7 @@ public class WeatherUpdater {
         HttpHeaders headers = new HttpHeaders();
 
         if (header)
-            headers.add("X-Yandex-API-Key", "d43de752-4d15-4b22-9093-72e8dc7794b0");
+            headers.add("X-Yandex-API-Key", TokenYandexApi);
 
         HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
         ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
@@ -70,7 +86,7 @@ public class WeatherUpdater {
 
     private String Geocode(String city) {
         unknownCity.add(city);
-        String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=AIzaSyCjzksE_SwyV6AQSJw9EoL3Lq9T0jY3ekg",
+        String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=" + TokenGoogleApi,
                                     city);
 
         String response = Request(url, false);
@@ -111,9 +127,10 @@ public class WeatherUpdater {
             String pressure = rootNode.path("fact").path("pressure_pa").asText();
             String humidity = rootNode.path("fact").path("humidity").asText();
             String cloudness = rootNode.path("fact").path("cloudness").asText();
+            float cloud = Float.parseFloat(cloudness) * 100;
 
             Weather weather = new WeatherBuilder()
-                    .withCloudness(cloudness)
+                    .withCloudness(String.valueOf(cloud))
                     .withHumidity(humidity)
                     .withPressure(pressure)
                     .withTemp(temp)
@@ -131,7 +148,7 @@ public class WeatherUpdater {
     private boolean RequestOpenWeather(String city) {
         String coordinates = Coordinates(city);
         if (coordinates == null) return false;
-        String url = String.format("https://api.openweathermap.org/data/2.5/weather?%s&units=metric&APPID=c351d6bef8d8ca2005cd43ddbad73a04",
+        String url = String.format("https://api.openweathermap.org/data/2.5/weather?%s&units=metric&APPID=" + TokenOpenWeatherApi,
                                         coordinates);
 
         String response = Request(url, false);
