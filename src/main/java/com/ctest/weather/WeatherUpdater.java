@@ -55,18 +55,25 @@ public class WeatherUpdater {
         return null;
     }
 
+    private String Request(String url, boolean header) {
+        String body = "";
+        RestTemplate rest = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+
+        if (header)
+            headers.add("X-Yandex-API-Key", "d43de752-4d15-4b22-9093-72e8dc7794b0");
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
+        return responseEntity.getBody();
+    }
+
     private String Geocode(String city) {
         unknownCity.add(city);
         String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=AIzaSyCjzksE_SwyV6AQSJw9EoL3Lq9T0jY3ekg",
                                     city);
-        RestTemplate rest = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        String body = "";
 
-        HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<String> responseEntity = rest.exchange(url,
-                HttpMethod.GET, requestEntity, String.class);
-        String response = responseEntity.getBody();
+        String response = Request(url, false);
 
         ObjectMapper objectMapper = new ObjectMapper();
         assert response != null;
@@ -92,14 +99,8 @@ public class WeatherUpdater {
         if (coordinates == null) return false;
         String url = String.format("https://api.weather.yandex.ru/v1/forecast?%s&limit=1&extra=true",
                                     coordinates);
-        String body = "";
 
-        RestTemplate rest = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-Yandex-API-Key", "d43de752-4d15-4b22-9093-72e8dc7794b0");
-        HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
-        String response = responseEntity.getBody();
+        String response = Request(url, true);
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -132,14 +133,8 @@ public class WeatherUpdater {
         if (coordinates == null) return false;
         String url = String.format("https://api.openweathermap.org/data/2.5/weather?%s&units=metric&APPID=c351d6bef8d8ca2005cd43ddbad73a04",
                                         coordinates);
-        String body = "";
 
-        RestTemplate rest = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
-     //   HttpStatus status = responseEntity.getStatusCode();
-        String response = responseEntity.getBody();
+        String response = Request(url, false);
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
