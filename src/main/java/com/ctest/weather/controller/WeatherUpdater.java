@@ -130,7 +130,7 @@ public class WeatherUpdater {
             float cloud = Float.parseFloat(cloudness) * 100;
 
             Weather weather = new WeatherBuilder()
-                    .withCloudness(String.valueOf(cloud))
+                    .withCloudness(String.format("%.0f", cloud))
                     .withHumidity(humidity)
                     .withPressure(pressure)
                     .withTemp(temp)
