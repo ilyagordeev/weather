@@ -1,6 +1,6 @@
 package com.ctest.weather.controller;
 
-import com.ctest.weather.ClientConfig;
+import com.ctest.weather.TokensConfig;
 import com.ctest.weather.model.Weather;
 import com.ctest.weather.model.WeatherBuilder;
 import com.ctest.weather.model.WeatherRepository;
@@ -29,7 +29,7 @@ public class WeatherUpdater {
 
     public WeatherUpdater(WeatherRepository weatherRepository) {
         this.weatherRepository = weatherRepository;
-        ClientConfig cfg = ConfigFactory.create(ClientConfig.class);
+        TokensConfig cfg = ConfigFactory.create(TokensConfig.class);
         TokenGoogleApi = cfg.TokenGoogleApi();
         TokenYandexApi = cfg.TokenYandexApi();
         TokenOpenWeatherApi = cfg.TokenOpenWeatherApi();
