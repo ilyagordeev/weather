@@ -7,21 +7,13 @@ import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 public class WeatherUpdater {
-
-    private static Map<String, String> coordinatesCache = new HashMap<>()
-    {{
-        put("Екатеринбург", "lat=56.836331&lon=60.605546"); // Ekaterinburg
-        put("Москва", "lat=55.748952&lon=37.620076"); // Moscow
-        put("Нью-Йорк", "lat=40.726063&lon=-73.822881"); // New-York
-        put("Амстердам", "lat=52.377109&lon=4.897162"); // Amsterdam
-        put("Магадан", "lat=59.563922&lon=150.814959"); // Magadan
-    }};
-
-    private final WeatherRepository weatherRepository;
 
     public WeatherUpdater(WeatherRepository weatherRepository) {
         this.weatherRepository = weatherRepository;
@@ -32,6 +24,23 @@ public class WeatherUpdater {
         if (weatherProvider.equals("OpenWeather")) return RequestOpenWeather(city);
         return false;
     }
+
+    public static boolean inUnknownCity(String city) {
+        return unknownCity.contains(city);
+    }
+
+    private static Map<String, String> coordinatesCache = new ConcurrentHashMap<String, String>()
+    {{
+        put("Екатеринбург", "lat=56.836331&lon=60.605546");
+        put("Москва", "lat=55.748952&lon=37.620076");
+        put("Нью-Йорк", "lat=40.726063&lon=-73.822881");
+        put("Амстердам", "lat=52.377109&lon=4.897162");
+        put("Магадан", "lat=59.563922&lon=150.814959");
+    }};
+
+    private static Set<String> unknownCity = new HashSet<>();
+
+    private final WeatherRepository weatherRepository;
 
     private String Coordinates(String city) {
         if (!coordinatesCache.containsKey(city)) {
@@ -47,6 +56,7 @@ public class WeatherUpdater {
     }
 
     private String Geocode(String city) {
+        unknownCity.add(city);
         String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=AIzaSyCjzksE_SwyV6AQSJw9EoL3Lq9T0jY3ekg",
                                     city);
         RestTemplate rest = new RestTemplate();
@@ -69,6 +79,7 @@ public class WeatherUpdater {
             String lng = rootNode.path("results").get(0).path("geometry").path("location").path("lng").asText();
             String address = rootNode.path("results").get(0).path("formatted_address").asText();
             System.out.println(address);
+            unknownCity.remove(city);
             if (status.equals("OK")) return "lat=" + lat + "&lon=" + lng;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
