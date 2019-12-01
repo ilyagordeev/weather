@@ -104,19 +104,24 @@ public class Weather {
 
     public void setTemp(String temp) {
         this.temp = temp;
-        Float tempI = Float.parseFloat(temp);
-        if (tempI <= 0) {
-            this.color = "#74a3ff";
-            this.color2 = "#0055ff";
-        } else if (tempI > 0 && tempI < 15) {
-            this.color = "#52ffcb";
-            this.color2 = "#00a070";
-        } else if (tempI >= 15 && tempI < 25) {
-            this.color = "#ff8e79";
-            this.color2 = "#d0280a";
-        } else {
-            this.color = "#ff0000";
-            this.color2 = "#bc0000";
+        if (temp == null) return;
+        try {
+            Float tempI = Float.parseFloat(temp);
+            if (tempI <= 0) {
+                this.color = "#74a3ff";
+                this.color2 = "#0055ff";
+            } else if (tempI > 0 && tempI < 15) {
+                this.color = "#52ffcb";
+                this.color2 = "#00a070";
+            } else if (tempI >= 15 && tempI < 25) {
+                this.color = "#ff8e79";
+                this.color2 = "#d0280a";
+            } else {
+                this.color = "#ff0000";
+                this.color2 = "#bc0000";
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Set color error: " + e.getMessage());
         }
     }
 

@@ -1,7 +1,6 @@
 package com.ctest.weather.controller;
 
 import com.ctest.weather.model.Weather;
-import com.ctest.weather.model.WeatherBuilder;
 import com.ctest.weather.model.WeatherRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,15 +21,7 @@ public class ApiController {
         this.weatherRepository = weatherRepository;
         weatherUpdater = new WeatherUpdater(weatherRepository);
 
-        fail = new WeatherBuilder()
-                .withCity("city")
-                .withWeatherProvider("weatherProvider")
-                .withCloudness("0_0")
-                .withHumidity("-_-")
-                .withPressure("$_$")
-                .withTemp("0")
-                .withAdress("1")
-                .withWind("0").build();
+        fail = new Weather();
     }
 
     @PostMapping("/weather")
@@ -65,8 +56,7 @@ public class ApiController {
         System.out.println(city);
 
         // возвращаем ошибку
-        if (!update || weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).isEmpty())
-            return fail;
+        if (!update) return fail;
 
         // возвращаем результат
         return weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get(0);
