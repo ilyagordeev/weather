@@ -29,6 +29,7 @@ public class ApiController {
                 .withHumidity("-_-")
                 .withPressure("$_$")
                 .withTemp("0")
+                .withAdress("1")
                 .withWind("0").build();
     }
 

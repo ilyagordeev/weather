@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aeonbits.owner.ConfigFactory;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -45,22 +46,22 @@ public class WeatherUpdater {
         return unknownCity.contains(city);
     }
 
-    private static Map<String, String> coordinatesCache = new ConcurrentHashMap<String, String>()
+    private static Map<String, Pair<String, String>> coordinatesCache = new ConcurrentHashMap<String, Pair<String, String>>()
     {{
-        put("Екатеринбург", "lat=56.836331&lon=60.605546");
-        put("Москва", "lat=55.748952&lon=37.620076");
-        put("Нью-Йорк", "lat=40.726063&lon=-73.822881");
-        put("Амстердам", "lat=52.377109&lon=4.897162");
-        put("Магадан", "lat=59.563922&lon=150.814959");
+        put("Екатеринбург", Pair.of("lat=56.836331&lon=60.605546", "Россия, Свердловская область"));
+        put("Москва", Pair.of("lat=55.748952&lon=37.620076", "Россия"));
+        put("Нью-Йорк", Pair.of("lat=40.726063&lon=-73.822881", "США"));
+        put("Амстердам", Pair.of("lat=52.377109&lon=4.897162", "Нидерланды"));
+        put("Магадан", Pair.of("lat=59.563922&lon=150.814959", "Россия, Магаданская область"));
     }};
 
     private static Set<String> unknownCity = new HashSet<>();
 
     private final WeatherRepository weatherRepository;
 
-    private String Coordinates(String city) {
+    private Pair<String, String> Coordinates(String city) {
         if (!coordinatesCache.containsKey(city)) {
-            String coordinates = Geocode(city);
+            Pair<String, String> coordinates = Geocode(city);
             if (coordinates != null) {
                 coordinatesCache.put(city, coordinates);
                 return coordinates;
@@ -84,7 +85,7 @@ public class WeatherUpdater {
         return responseEntity.getBody();
     }
 
-    private String Geocode(String city) {
+    private Pair<String, String> Geocode(String city) {
         unknownCity.add(city);
         String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=" + TokenGoogleApi,
                                     city);
@@ -103,7 +104,7 @@ public class WeatherUpdater {
             String address = rootNode.path("results").get(0).path("formatted_address").asText();
             System.out.println(address);
             unknownCity.remove(city);
-            if (status.equals("OK")) return "lat=" + lat + "&lon=" + lng;
+            if (status.equals("OK")) return Pair.of("lat=" + lat + "&lon=" + lng, address);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -111,10 +112,10 @@ public class WeatherUpdater {
     }
 
     private boolean RequestYandex(String city) {
-        String coordinates = Coordinates(city);
+        Pair<String, String> coordinates = Coordinates(city);
         if (coordinates == null) return false;
         String url = String.format("https://api.weather.yandex.ru/v1/forecast?%s&limit=1&extra=true",
-                                    coordinates);
+                                    coordinates.getFirst());
 
         String response = Request(url, true);
 
@@ -136,6 +137,7 @@ public class WeatherUpdater {
                     .withTemp(temp)
                     .withWind(wind)
                     .withCity(city)
+                    .withAdress(coordinates.getSecond())
                     .withWeatherProvider("Yandex").build();
 
             weatherRepository.save(weather);
@@ -146,10 +148,10 @@ public class WeatherUpdater {
     }
 
     private boolean RequestOpenWeather(String city) {
-        String coordinates = Coordinates(city);
+        Pair<String, String> coordinates = Coordinates(city);
         if (coordinates == null) return false;
         String url = String.format("https://api.openweathermap.org/data/2.5/weather?%s&units=metric&APPID=" + TokenOpenWeatherApi,
-                                        coordinates);
+                                        coordinates.getFirst());
 
         String response = Request(url, false);
 
@@ -170,6 +172,7 @@ public class WeatherUpdater {
                     .withTemp(temp)
                     .withWind(wind)
                     .withCity(city)
+                    .withAdress(coordinates.getSecond())
                     .withWeatherProvider("OpenWeather").build();
 
             weatherRepository.save(weather);

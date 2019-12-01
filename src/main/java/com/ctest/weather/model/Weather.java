@@ -22,6 +22,7 @@ public class Weather {
     private String color; // цвета для значка градусов (градиент)
     private String color2;
     private String result;
+    private String adress;
     private Long requestTime;
 
     public Weather() {
@@ -31,6 +32,14 @@ public class Weather {
 
     public boolean expired() {
         return (new Date().getTime() - requestTime) >= UpdateTime;
+    }
+
+    public String getAdress() {
+        return adress;
+    }
+
+    public void setAdress(String adress) {
+        this.adress = adress;
     }
 
     public Long getId() {
