@@ -30,7 +30,6 @@ public class ApiController {
                 .withPressure("$_$")
                 .withTemp("0")
                 .withWind("0").build();
-        fail.setResult("notfound");
     }
 
     @PostMapping("/weather")
@@ -38,18 +37,22 @@ public class ApiController {
 
         String city = request.getParameter("city");
         String weatherProvider = request.getParameter("weatherProvider");
+        fail.setCity(city);
+        fail.setWeatherProvider(weatherProvider);
+        fail.setResult("notfound");
         boolean update = true; // update status, true if success
 
         // проверка корректности провайдера погоды и при необходимости создание/обновление объекта погоды
         if (weatherProvider.equals("Yandex") || weatherProvider.equals("OpenWeather")) {
-            if (!weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).isPresent()) {
+            if (weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).isEmpty()) {
                 if (!WeatherUpdater.inUnknownCity(city))
                     update = weatherUpdater.Update(city, weatherProvider);
                 else {
                     update = false;
+                    fail.setResult("wait");
                 }
-            } else if (weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get().expired()) {
-                weatherRepository.delete(weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get());
+            } else if (weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get(0).expired()) {
+                weatherRepository.delete(weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get(0));
                 update = weatherUpdater.Update(city, weatherProvider);
             }
         } else update = false;
@@ -61,13 +64,11 @@ public class ApiController {
         System.out.println(city);
 
         // возвращаем ошибку
-        if (!update) {
-            fail.setCity(city);
-            fail.setWeatherProvider(weatherProvider);
+        if (!update || weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).isEmpty())
             return fail;
-        }
 
-        return weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get();
+        // возвращаем результат
+        return weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get(0);
     }
 
 }

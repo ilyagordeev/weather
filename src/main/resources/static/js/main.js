@@ -158,6 +158,10 @@ $(document).ready(function () {
 					$('.weather-items').addClass('notfound');
 					$('.preloader').hide();
 				}
+
+				if (result.result == "wait") {
+					$('.preloader').hide();
+				}
 				
 				
 				// $('.js-upd-tm').text(result.requestTime);

@@ -39,9 +39,9 @@ section{padding:40px 0}
 .weather-items.error{background:red;padding:20px;border-radius:5px}
 .weather-items.error:after{content:'Что-то сломалось :(';position:absolute;top:0;bottom:0;left:0;right:0;background:red;color:#fff;display:flex;align-items:center;justify-content:center;z-index:40}
 
-
 .weather-items.notfound{background:#ccc;padding:20px;border-radius:5px}
 .weather-items.notfound:after{content:'Такой локации не найдено. Поищем другую?';position:absolute;top:0;bottom:0;left:0;right:0;background:#ccc;color:#000;display:flex;align-items:center;justify-content:center;z-index:40}
+
 .weather-items{overflow:hidden;position:relative}
 .weather-item{display:inline-flex;flex-direction:column;justify-content:space-between;vertical-align:top;width:33.33%;min-width:230px;max-width:265px;background-repeat:no-repeat;background-position:50% 50%;background-size:cover!important;border-bottom:1px solid #d8d8d8;border-left:1px solid #d8d8d8;height:200px;position:relative;color:#262626;padding:20px;transition:all .5s;box-sizing:border-box;margin-left:-1px;margin-bottom:-1px;position:relative}
 .weather-item:last-child{border-right:1px solid #d8d8d8}
