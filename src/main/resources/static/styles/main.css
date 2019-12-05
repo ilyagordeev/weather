@@ -35,7 +35,7 @@ a{color:#2a8efb;text-decoration:underline}
 a:hover,.ajax-link:hover,.link:hover{text-decoration:none;color:#2a8efb}
 .wrapper{max-width:1100px;margin:0 auto}
 .container{margin:0 20px}
-section{padding:40px 0}
+section{padding:35px 0}
 .weather-items.error{background:red;padding:20px;border-radius:5px}
 .weather-items.error:after{content:'Что-то сломалось :(';position:absolute;top:0;bottom:0;left:0;right:0;background:red;color:#fff;display:flex;align-items:center;justify-content:center;z-index:40}
 
