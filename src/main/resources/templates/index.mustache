@@ -27,14 +27,14 @@
 					<form id="sendme">
 						
 							<div class="city-row">
-                                    <div class="pseudolabel adress">Екатеринбург</div>
-									<input type="text" name ="city_ps" id="city_ps" class="custom-select" value="Екатеринбург">
+                                    <div class="pseudolabel adress">{{city}}</div>
+									<input type="text" name ="city_ps" id="city_ps" class="custom-select" value="{{city}}">
 									<span class="search_btn"></span>
                             </div>
 
-						    <input type="hidden" name ="city" id="city" class="custom-select js-check" value="Екатеринбург">
+						    <input type="hidden" name ="city" id="city" class="custom-select js-check" value="{{city}}">
 								<div class="city_list">
-										<span class="city-name-label" data-name="Екатеринбург" selected>Екатеринбург</span>
+										<span class="city-name-label" data-name="{{city}}" selected>{{city}}</span>
 										<span class="city-name-label" data-name="Москва">Москва</span>
 										<span class="city-name-label" data-name="Нью-Йорк">Нью-Йорк</span>
 										<span class="city-name-label" data-name="Амстердам">Амстердам</span>

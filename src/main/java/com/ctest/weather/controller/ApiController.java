@@ -26,7 +26,6 @@ public class ApiController {
 
     @PostMapping("/weather")
     public Weather getWeather(HttpServletResponse response, HttpServletRequest request) {
-
         String city = request.getParameter("city");
         String weatherProvider = request.getParameter("weatherProvider");
         fail.setCity(city);
