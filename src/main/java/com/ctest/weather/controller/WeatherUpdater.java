@@ -8,11 +8,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aeonbits.owner.ConfigFactory;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.util.Pair;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -21,15 +24,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-
+@Service
 public class WeatherUpdater {
 
     private final String TokenGoogleApi;
     private final String TokenYandexApi;
     private final String TokenOpenWeatherApi;
+    private final RestTemplate rest;
 
     public WeatherUpdater(WeatherRepository weatherRepository) {
         this.weatherRepository = weatherRepository;
+        this.rest = new RestTemplateBuilder().build();
         TokensConfig cfg = ConfigFactory.create(TokensConfig.class);
         TokenGoogleApi = cfg.TokenGoogleApi();
         TokenYandexApi = cfg.TokenYandexApi();
@@ -72,9 +77,9 @@ public class WeatherUpdater {
         return null;
     }
 
-    private String Request(String url, boolean header) {
+    @Async
+    String Request(String url, boolean header) {
         String body = "";
-        RestTemplate rest = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
 
         if (header)
