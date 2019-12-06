@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static org.springframework.util.StringUtils.capitalize;
+
 @RestController
 @RequestMapping("/api")
 public class ApiController {
@@ -27,6 +29,7 @@ public class ApiController {
     @PostMapping("/weather")
     public Weather getWeather(HttpServletResponse response, HttpServletRequest request) {
         String city = request.getParameter("city");
+        if (city != null) city = capitalize(city);
         String weatherProvider = request.getParameter("weatherProvider");
         fail.setCity(city);
         fail.setWeatherProvider(weatherProvider);
@@ -34,7 +37,8 @@ public class ApiController {
         boolean update = true; // update status, true if success
 
         // проверка корректности провайдера погоды и при необходимости создание/обновление объекта погоды
-        if (weatherProvider.equals("Yandex") || weatherProvider.equals("OpenWeather")) {
+        if (weatherProvider != null && city != null &&
+                (weatherProvider.equals("Yandex") || weatherProvider.equals("OpenWeather"))) {
             if (weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).isEmpty()) {
                 if (!WeatherUpdater.inUnknownCity(city))
                     update = weatherUpdater.Update(city, weatherProvider);
@@ -51,8 +55,8 @@ public class ApiController {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Headers", "x-requested-with");
 
-        System.out.println(update);
-        System.out.println(city);
+        System.out.println("Update weather status: " + update);
+        System.out.println("Location: " + city);
 
         // возвращаем ошибку
         if (!update) return fail;
