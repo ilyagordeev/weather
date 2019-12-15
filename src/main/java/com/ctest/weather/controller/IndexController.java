@@ -1,6 +1,5 @@
 package com.ctest.weather.controller;
 
-import com.ctest.weather.model.WeatherRepository;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +16,9 @@ import java.util.Map;
 @Controller
 public class IndexController {
 
-    private final WeatherRepository weatherRepository;
     private final LocalLocation localLocation;
 
-    public IndexController(WeatherRepository weatherRepository, LocalLocation localLocation) {
-        this.weatherRepository = weatherRepository;
+    public IndexController(LocalLocation localLocation) {
         this.localLocation = localLocation;
     }
 
