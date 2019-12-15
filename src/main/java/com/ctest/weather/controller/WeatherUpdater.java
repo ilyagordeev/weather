@@ -31,6 +31,7 @@ public class WeatherUpdater {
     private final String TokenYandexApi;
     private final String TokenOpenWeatherApi;
     private final RestTemplate rest;
+    private final WeatherRepository weatherRepository;
 
     public WeatherUpdater(WeatherRepository weatherRepository) {
         this.weatherRepository = weatherRepository;
@@ -61,8 +62,6 @@ public class WeatherUpdater {
     }};
 
     private static Set<String> unknownCity = new HashSet<>();
-
-    private final WeatherRepository weatherRepository;
 
     private Pair<String, String> Coordinates(String city) {
         if (!coordinatesCache.containsKey(city)) {

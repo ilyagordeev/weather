@@ -19,9 +19,9 @@ public class ApiController {
     final WeatherUpdater weatherUpdater;
     Weather fail;
 
-    public ApiController(WeatherRepository weatherRepository) {
+    public ApiController(WeatherRepository weatherRepository, WeatherUpdater weatherUpdater) {
         this.weatherRepository = weatherRepository;
-        weatherUpdater = new WeatherUpdater(weatherRepository);
+        this.weatherUpdater = weatherUpdater;
 
         fail = new Weather();
     }

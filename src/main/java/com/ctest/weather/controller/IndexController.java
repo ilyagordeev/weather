@@ -41,15 +41,15 @@ public class IndexController {
     public ModelAndView index(HttpServletResponse response, HttpServletRequest request) {
         String city = "Екатеринбург";
 
-       Cookie[] cookies = request.getCookies();
-       if (cookies == null) {
-           try {
-               String getCity = getLocation(request.getRemoteHost());
-               if (getCity != null) city = getCity;
-           } catch (IOException | GeoIp2Exception e) {
-               e.printStackTrace();
-           }
-       }
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            try {
+                String getCity = getLocation(request.getRemoteHost());
+                if (getCity != null) city = getCity;
+            } catch (IOException | GeoIp2Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         String finalCity = city;
         Map<String, String> model = new HashMap<String, String>(){{
