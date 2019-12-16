@@ -47,7 +47,9 @@ public class ApiController {
                     fail.setResult("wait");
                 }
             } else if (weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get(0).expired()) {
-                weatherRepository.delete(weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get(0));
+                weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider)
+                        .stream().forEach(weatherRepository::delete);
+                //weatherRepository.delete(weatherRepository.findWeatherByCityAndWeatherProvider(city, weatherProvider).get(0));
                 update = weatherUpdater.Update(city, weatherProvider);
             }
         } else update = false;
