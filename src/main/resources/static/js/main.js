@@ -137,8 +137,8 @@ $(document).ready(function () {
 					var color = result.color;
 					var color2 = result.color2;
 					var cloudness = result.cloudness;
-					var adress = result.adress;
-					$('.adress').text(adress);
+					var address = result.address;
+					$('.address').text(address);
 					$('.bg-cloudness').css("top", (100 - cloudness) + "%");
 					$('.c-temp').text(temp);
 					$('.c-wind').text(wind);
@@ -153,12 +153,12 @@ $(document).ready(function () {
 				}
 
 				if (result.result == 'error') {
-					$('.adress').text("");
+					$('.address').text("");
 					$('.weather-items').addClass('error');
 				}
 				
 				if (result.result == 'notfound') {
-					$('.adress').text("");
+					$('.address').text("");
 					$('.weather-items').addClass('notfound');
 					$('.preloader').hide();
 				}
