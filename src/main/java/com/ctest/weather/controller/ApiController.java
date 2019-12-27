@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import static org.springframework.util.StringUtils.capitalize;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/weather_api")
 public class ApiController {
 
     final WeatherRepository weatherRepository;
@@ -26,7 +26,7 @@ public class ApiController {
         fail = new Weather();
     }
 
-    @PostMapping("/weather")
+    @PostMapping
     public Weather getWeather(HttpServletResponse response, HttpServletRequest request) {
         String city = request.getParameter("city");
         if (city != null) city = capitalize(city);

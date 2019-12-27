@@ -46,15 +46,15 @@
 
 									<div class="pseudolabel">Источник данных</div>
 									<div class="checkcontainers">
-										<label class="checkcontainer">
-											Яндекс-Погода  		
-											<input type="radio" value="Yandex" id="yandex" name="weatherProvider" class="custom-control-input  js-check" checked>
-											<span class="radiobtn"></span>
-										</label>
+<!--										<label class="checkcontainer">-->
+<!--											Яндекс-Погода  		-->
+<!--											<input type="radio" value="Yandex" id="yandex" name="weatherProvider" class="custom-control-input  js-check">-->
+<!--											<span class="radiobtn"></span>-->
+<!--										</label>-->
 
 										<label class="checkcontainer">
 											OpenWeather  		
-											<input type="radio" value="OpenWeather" id="openWeather" name="weatherProvider" class="custom-control-input  js-check" >
+											<input type="radio" value="OpenWeather" id="openWeather" name="weatherProvider" class="custom-control-input  js-check" checked>
 											<span class="radiobtn"></span>
 										</label>
 									</div>
@@ -77,7 +77,7 @@
 					</div><!-- 
 					--><div class="weather-item">
 						<div class="weather-item-name">Влажность</div>
-						<div class="weather-item-val"><span class="c-humidity"></div>
+                        <div class="weather-item-val"><span class="c-humidity"></span></div>
 						<div class="weather-item-bg bg-humidity"></div>
 						<div class="weather-item-descr">относительные проценты</div>
 
@@ -104,6 +104,15 @@
 				</div>
 			</div>
 		</section>
+
+        <section>
+            <div class="wrapper">
+                <div class="container">
+                    <span class="js-upd-tm"></span><br>
+                    <span class="js-upd-tm-fr"></span>
+                </div>
+            </div>
+        </section>
 
 
 	</main>

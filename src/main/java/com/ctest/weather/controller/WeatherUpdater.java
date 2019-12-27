@@ -1,20 +1,20 @@
 package com.ctest.weather.controller;
 
-import com.ctest.weather.TokensConfig;
 import com.ctest.weather.model.Weather;
 import com.ctest.weather.model.WeatherBuilder;
 import com.ctest.weather.model.WeatherRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.aeonbits.owner.ConfigFactory;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.util.Pair;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,22 +27,22 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class WeatherUpdater {
 
-    private final String TokenGoogleApi;
-    private final String TokenYandexApi;
-    private final String TokenOpenWeatherApi;
+    @Value("${token.google}")
+    private String TokenGoogleApi;
+    @Value("${token.yandex}")
+    private String TokenYandexApi;
+    @Value("${token.openweather}")
+    private String TokenOpenWeatherApi;
+
     private final RestTemplate rest;
     private final WeatherRepository weatherRepository;
 
     public WeatherUpdater(WeatherRepository weatherRepository) {
         this.weatherRepository = weatherRepository;
         this.rest = new RestTemplateBuilder().build();
-        TokensConfig cfg = ConfigFactory.create(TokensConfig.class);
-        TokenGoogleApi = cfg.TokenGoogleApi();
-        TokenYandexApi = cfg.TokenYandexApi();
-        TokenOpenWeatherApi = cfg.TokenOpenWeatherApi();
     }
 
-    public boolean Update(String city, String weatherProvider) {
+    public boolean Update(String city, @NotNull String weatherProvider) {
         if (weatherProvider.equals("Yandex")) return RequestYandex(city);
         if (weatherProvider.equals("OpenWeather")) return RequestOpenWeather(city);
         return false;
@@ -51,6 +51,8 @@ public class WeatherUpdater {
     public static boolean inUnknownCity(String city) {
         return unknownCity.contains(city);
     }
+
+    private static Set<String> unknownCity = new HashSet<>();
 
     private static Map<String, Pair<String, String>> coordinatesCache = new ConcurrentHashMap<String, Pair<String, String>>()
     {{
@@ -61,8 +63,7 @@ public class WeatherUpdater {
         put("Магадан", Pair.of("lat=59.563922&lon=150.814959", "Россия, Магаданская область"));
     }};
 
-    private static Set<String> unknownCity = new HashSet<>();
-
+    @Nullable
     private Pair<String, String> Coordinates(String city) {
         if (!coordinatesCache.containsKey(city)) {
             Pair<String, String> coordinates = Geocode(city);
@@ -76,7 +77,6 @@ public class WeatherUpdater {
         return null;
     }
 
-    @Async
     String Request(String url, boolean header) {
         String body = "";
         HttpHeaders headers = new HttpHeaders();

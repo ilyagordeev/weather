@@ -4,7 +4,7 @@ $(document).ready(function () {
 
 	var form_id = 'sendme';
 	var update_time = 30000;
-	var api_url = '/api/weather';
+	var api_url = '/weather_api';
 
 	if (Cookies.get('weather_provider')) 
 		{
@@ -168,8 +168,11 @@ $(document).ready(function () {
 				}
 				
 				
-				// $('.js-upd-tm').text(result.requestTime);
-				// $('.js-upd-tm-fr').text($.now());
+				// отладочная информация
+				var date = new Date(result.requestTime).toLocaleTimeString();
+				var nowDate = new Date($.now()).toLocaleTimeString();
+				$('.js-upd-tm').text('Back: ' + date);
+				 $('.js-upd-tm-fr').text('Front: ' + nowDate);
 
 			},
 			error: function (response) {

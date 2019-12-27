@@ -8,7 +8,7 @@ public final class WeatherBuilder {
     private String wind;
     private String pressure;
     private String humidity;
-    private String adress;
+    private String address;
 
     public WeatherBuilder() {
     }
@@ -52,8 +52,8 @@ public final class WeatherBuilder {
         return this;
     }
 
-    public WeatherBuilder withAdress(String adress) {
-        this.adress = adress;
+    public WeatherBuilder withAdress(String address) {
+        this.address = address;
         return this;
     }
 
@@ -66,7 +66,7 @@ public final class WeatherBuilder {
         weather.setWind(wind);
         weather.setPressure(pressure);
         weather.setHumidity(humidity);
-        weather.setAdress(adress);
+        weather.setAddress(address);
         return weather;
     }
 }

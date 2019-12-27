@@ -7,11 +7,13 @@ import java.util.Date;
 
 @Entity
 public class Weather {
+
+
     @Id
     @GeneratedValue
     private Long id;
 
-    private final Long UpdateTime = 200000L;
+    private Long UpdateTime = 200000L;
     private String city;
     private String weatherProvider;
     private String temp;
@@ -22,7 +24,7 @@ public class Weather {
     private String color; // цвета для значка градусов (градиент)
     private String color2;
     private String result;
-    private String adress;
+    private String address;
     private Long requestTime;
 
     public Weather() {
@@ -34,12 +36,12 @@ public class Weather {
         return (new Date().getTime() - requestTime) >= UpdateTime;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Long getId() {
@@ -106,7 +108,7 @@ public class Weather {
         this.temp = temp;
         if (temp == null) return;
         try {
-            Float tempI = Float.parseFloat(temp);
+            float tempI = Float.parseFloat(temp);
             if (tempI <= 0) {
                 this.color = "#74a3ff";
                 this.color2 = "#0055ff";
