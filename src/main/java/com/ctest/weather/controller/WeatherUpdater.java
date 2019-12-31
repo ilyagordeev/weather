@@ -118,7 +118,7 @@ public class WeatherUpdater {
     private boolean RequestYandex(String city) {
         Pair<String, String> coordinates = Coordinates(city);
         if (coordinates == null) return false;
-        String url = String.format("https://api.weather.yandex.ru/v1/forecast?%s&limit=1&extra=true",
+        String url = String.format("https://api.weather.yandex.ru/v1/informers?%s",
                                     coordinates.getFirst());
 
         String response = Request(url, true);
@@ -131,11 +131,12 @@ public class WeatherUpdater {
             String wind = rootNode.path("fact").path("wind_speed").asText();
             String pressure = rootNode.path("fact").path("pressure_pa").asText();
             String humidity = rootNode.path("fact").path("humidity").asText();
-            String cloudness = rootNode.path("fact").path("cloudness").asText();
-            float cloud = Float.parseFloat(cloudness) * 100;
+           // String cloudness = rootNode.path("fact").path("cloudness").asText();
+           // float cloud = Float.parseFloat(cloudness) * 100;
 
             Weather weather = new WeatherBuilder()
-                    .withCloudness(String.format("%.0f", cloud))
+                   // .withCloudness(String.format("%.0f", cloud))
+                    .withCloudness("?")
                     .withHumidity(humidity)
                     .withPressure(pressure)
                     .withTemp(temp)

@@ -13,7 +13,7 @@ public class Weather {
     @GeneratedValue
     private Long id;
 
-    private Long UpdateTime = 200000L;
+    private Long UpdateTime = 500000L;
     private String city;
     private String weatherProvider;
     private String temp;
